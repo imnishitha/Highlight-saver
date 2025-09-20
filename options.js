@@ -80,26 +80,26 @@ function showStatus(message, type) {
   statusDiv.className = "status " + type;
 }
 
-// Helper function to extract database ID from URL
+
 function extractDatabaseId(input) {
   console.log("Original input:", input);
   
-  // Remove everything after ? or # if present
+
   let cleaned = input.split('?')[0].split('#')[0];
   console.log("After removing query params:", cleaned);
   
-  // If it's a full URL, extract the ID part
+
   if (cleaned.includes('notion.so')) {
     const parts = cleaned.split('/');
     cleaned = parts[parts.length - 1];
     console.log("After extracting from URL:", cleaned);
   }
   
-  // Remove any remaining dashes to get clean UUID, then re-add them in correct format
+
   const cleanId = cleaned.replace(/-/g, '');
   console.log("Clean ID (no dashes):", cleanId);
   
-  // Check if it's the right length for a UUID (32 characters)
+
   if (cleanId.length === 32) {
     const formatted = cleanId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
     console.log("Final formatted ID:", formatted);
@@ -107,10 +107,9 @@ function extractDatabaseId(input) {
   }
   
   console.log("Returning uncleaned (wrong length):", cleaned);
-  return cleaned; // Return as-is if not standard UUID length
+  return cleaned;
 }
 
-// Helper function to validate UUID format
 function isValidUUID(uuid) {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return uuidRegex.test(uuid);

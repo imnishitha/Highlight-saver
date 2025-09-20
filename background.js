@@ -10,11 +10,9 @@ chrome.runtime.onInstalled.addListener(() => {
 // Handle keyboard shortcuts
 chrome.commands.onCommand.addListener((command) => {
   if (command === "save-highlight") {
-    // Get the active tab
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
       const tab = tabs[0];
       if (tab) {
-        // Execute script to get selected text
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: () => window.getSelection().toString()
@@ -22,10 +20,8 @@ chrome.commands.onCommand.addListener((command) => {
           if (results && results[0] && results[0].result) {
             const selectedText = results[0].result;
             if (selectedText.trim()) {
-              // Process the highlight the same way as context menu
               handleHighlightSave(selectedText, tab.url, tab.title, tab.id);
             } else {
-              // Show message if no text selected
               chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 func: () => {
@@ -62,21 +58,18 @@ chrome.commands.onCommand.addListener((command) => {
   }
 });
 
-// Handle menu click
+
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "saveHighlight") {
     handleHighlightSave(info.selectionText, tab.url, tab.title, tab.id);
   }
 });
 
-// Common function to handle highlight saving
 function handleHighlightSave(selectedText, url, title, tabId) {
   chrome.storage.sync.get(["notionToken", "databaseId"], ({ notionToken, databaseId }) => {
     if (!notionToken || !databaseId) {
       console.log("Missing Notion config - opening options page");
-      // Open the options page
       chrome.runtime.openOptionsPage();
-      // Also show a popup alert
       chrome.scripting.executeScript({
         target: { tabId: tabId },
         func: () => {
@@ -86,7 +79,7 @@ function handleHighlightSave(selectedText, url, title, tabId) {
       return;
     }
     
-    // Clean database ID to ensure it's in proper UUID format
+
     const cleanDatabaseId = extractDatabaseId(databaseId);
     console.log("Original database ID:", databaseId);
     console.log("Cleaned database ID:", cleanDatabaseId);
@@ -104,16 +97,16 @@ async function saveToNotion(token, databaseId, text, url, pageTitle, tabId) {
         "Highlight": { 
           title: [{ 
             text: { 
-              content: text.substring(0, 2000) // Notion title has length limit
+              content: text.substring(0, 2000) 
             } 
           }] 
         },
         "Source": { 
-          url: url // Try URL type first
+          url: url 
         },
         "Date": { 
           date: { 
-            start: new Date().toISOString().split('T')[0] // Just date, not datetime
+            start: new Date().toISOString().split('T')[0] 
           } 
         }
       }
@@ -155,7 +148,6 @@ async function saveToNotion(token, databaseId, text, url, pageTitle, tabId) {
           `;
           document.body.appendChild(popup);
           
-          // Remove after 3 seconds
           setTimeout(() => {
             popup.style.opacity = '0';
             setTimeout(() => popup.remove(), 300);
@@ -166,7 +158,6 @@ async function saveToNotion(token, databaseId, text, url, pageTitle, tabId) {
       const error = await response.text();
       console.error("Failed to save to Notion:", error);
       
-      // If URL type failed, try with rich_text instead
       if (error.includes("Source is expected to be url")) {
         console.log("Retrying with rich_text format for Source...");
         const retryBody = {
@@ -300,24 +291,24 @@ async function saveToNotion(token, databaseId, text, url, pageTitle, tabId) {
   }
 }
 
-// Helper function to extract database ID from URL
+
 function extractDatabaseId(input) {
-  // Remove everything after ? or # if present
+
   let cleaned = input.split('?')[0].split('#')[0];
   
-  // If it's a full URL, extract the ID part
+
   if (cleaned.includes('notion.so')) {
     const parts = cleaned.split('/');
     cleaned = parts[parts.length - 1];
   }
   
-  // Remove any remaining dashes to get clean UUID, then re-add them in correct format
+
   const cleanId = cleaned.replace(/-/g, '');
   
-  // Check if it's the right length for a UUID (32 characters)
+
   if (cleanId.length === 32) {
     return cleanId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
   }
   
-  return cleaned; // Return as-is if not standard UUID length
+  return cleaned; 
 }
