@@ -1,0 +1,44 @@
+    # Byte-compiled / optimized / compiled files
+    __pycache__/
+    *.pyc
+    *.pyd
+    *.pyo
+
+    # C extensions
+    *.so
+
+    # Distribution / packaging
+    .Python
+    build/
+    dist/
+    *.egg-info/
+    .eggs/
+    wheels/
+    *.whl
+
+    # Environments
+    .env/
+    venv/
+    env/
+    .venv/
+
+    # Editors and IDEs
+    .vscode/
+    .idea/
+    *.iml
+    *.ipr
+    *.iws
+
+    # Testing
+    .pytest_cache/
+    .coverage
+    htmlcov/
+
+    # Logs and databases
+    *.log
+    *.sqlite3
+    *.db
+
+    # OS generated files
+    .DS_Store
+    Thumbs.db
