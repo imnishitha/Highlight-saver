@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Highlight Saver",
+    "version": "1.0",
+    "description": "Save highlighted text to Notion",
+    "permissions": ["contextMenus", "storage", "scripting", "activeTab"],
+    "host_permissions": [
+      "https://api.notion.com/*",
+      "https://*/*",
+      "http://*/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "options_page": "options.html",
+    "commands": {
+      "save-highlight": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+S",
+          "mac": "Command+Shift+S"
+        },
+        "description": "Save highlighted text to Notion"
+      }
+    }
+  }
