@@ -1,4 +1,4 @@
-# Universal Highlight Saver - Chrome Extension
+# TextVault - Chrome Extension
 
 A Chrome extension that allows you to save highlighted text to multiple platforms: Notion, Apple Notes, and Google Docs.
 
